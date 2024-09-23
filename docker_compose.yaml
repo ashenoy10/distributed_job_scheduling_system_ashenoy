@@ -1,0 +1,32 @@
+version: '1'
+
+services:
+  coordinator:
+    build: ./coordinator
+    container_name: coordinator
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+
+  worker_1:
+    build: ./worker
+    container_name: worker_1
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+
+  worker_2:
+    build: ./worker
+    container_name: worker_2
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    container_name: redis
