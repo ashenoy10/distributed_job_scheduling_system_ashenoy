@@ -1,9 +1,9 @@
-from celery import Celery
+from celery import Celery  # Import the tasks to ensure they are registered
 
 celery_app = Celery(
     'app',
-    broker='redis://localhost:6379/0',
-    backend='redis://localhost:6379/0'
+    broker='redis://redis:6379/0',
+    backend='redis://redis:6379/0'
 )
 
 celery_app.conf.update(
@@ -13,3 +13,5 @@ celery_app.conf.update(
     timezone='UTC',
     enable_utc=True,
 )
+
+from . import celery_tasks

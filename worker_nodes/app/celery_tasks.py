@@ -3,21 +3,12 @@ import time
 import random
 import numpy as np
 from celery import Celery
-from app.celery_worker import celery_app
+from .celery_worker import celery_app
 from datetime import datetime
 import math
-from app.worker import update_job_status
+from .worker import update_worker_status
 
 celery_app = Celery('tasks', broker='redis://localhost:6379/0')
-
-@celery_app.task
-def execute_job(job_id, data):
-    # Simulate job execution (replace this with real logic)
-    time.sleep(random.randint(1, 5))  # Simulate processing time
-
-    # Update job status to completed
-    update_job_status(job_id, "completed")
-    return {"status": "completed", "job_id": job_id}
 
 # Constants
 EARTH_ROTATION_RATE = 7.2921159e-5  # Earth's rotation rate in radians per second
@@ -55,7 +46,7 @@ def eci_to_ecef(eci_coords, timestamp):
     ecef_vector = np.dot(rotation_matrix, eci_vector)
     return tuple(ecef_vector)
 
-@celery_app.task(bind=True)
+@celery_app.task(bind=True, name="worker_nodes.app.celery_tasks.ingest_eci_output_ecef")
 def ingest_eci_output_ecef(self, job_id, eci_trajectory):
     """
     Ingests ECI trajectory and outputs ECEF trajectory.
@@ -65,6 +56,7 @@ def ingest_eci_output_ecef(self, job_id, eci_trajectory):
                     
     Returns a list of ECEF coordinates.
     """
+    update_worker_status("busy")
     ecef_trajectory = []
 
     for point in eci_trajectory:
@@ -79,5 +71,6 @@ def ingest_eci_output_ecef(self, job_id, eci_trajectory):
             'z_ecef': ecef_coords[2],
             'timestamp': point['timestamp']
         })
+        update_worker_status("available")
 
     return {"job_id": job_id, "ecef_trajectory": ecef_trajectory}

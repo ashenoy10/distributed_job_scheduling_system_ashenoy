@@ -4,3 +4,5 @@ celery
 redis
 pydantic
 typing
+numpy
+requests

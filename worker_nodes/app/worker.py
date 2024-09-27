@@ -1,12 +1,13 @@
 import requests
 import time
 from celery import Celery
-from app.celery_worker import celery_app
+from .celery_worker import celery_app
+import os
+
+WORKER_ID = os.getenv("WORKER_ID", "worker_default")
 
 # URL of the coordinator where worker registers its status
 COORDINATOR_URL = "http://coordinator:8000/register-worker"
-
-WORKER_ID = "worker_1"  # Unique ID for this worker
 
 def register_worker():
     """Register the worker with the central coordinator."""
@@ -18,7 +19,7 @@ def register_worker():
         print(f"Failed to register worker {WORKER_ID}.")
         
 def update_worker_status(status):
-    """Update the status of the worker (e.g., available, busy)."""
+    """Update the status of the worker."""
     payload = {"worker_id": WORKER_ID, "status": status}
     response = requests.post(COORDINATOR_URL, json=payload)
     if response.status_code == 200:
@@ -35,9 +36,3 @@ if __name__ == "__main__":
         'worker', 
         '--loglevel=info'
     ])
-    
-    # Optionally, you could implement logic to update the worker's status periodically
-    # For example, every 60 seconds, the worker can report that it's still active.
-    while True:
-        update_worker_status("available")
-        time.sleep(60)  # Report status every minute

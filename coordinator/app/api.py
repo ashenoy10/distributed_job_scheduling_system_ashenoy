@@ -17,7 +17,7 @@ class ECIRequest(BaseModel):
 @app.post("/submit-eci-to-ecef/")
 def submit_eci_to_ecef_endpoint(eci_request: ECIRequest):
     try:
-        task_id = submit_eci_to_ecef([point.dict() for point in eci_request.trajectory])
+        task_id = submit_eci_to_ecef([dict(point) for point in eci_request.trajectory])
         return {"task_id": task_id, "status": "Job submitted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

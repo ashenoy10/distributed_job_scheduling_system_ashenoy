@@ -1,9 +1,14 @@
-version: '1'
-
 services:
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+
   coordinator:
     build: ./coordinator
     container_name: coordinator
+    volumes:
+      - ./worker_nodes:/app/worker_nodes
     ports:
       - "8000:8000"
     environment:
@@ -12,21 +17,26 @@ services:
       - redis
 
   worker_1:
-    build: ./worker
-    container_name: worker_1
+    build: ./worker_nodes
+    command: celery -A app.celery_worker worker --loglevel=info
     environment:
-      - REDIS_HOST=redis
+      - WORKER_ID=worker_1
     depends_on:
       - redis
 
   worker_2:
-    build: ./worker
-    container_name: worker_2
+    build: ./worker_nodes
+    command: celery -A app.celery_worker worker --loglevel=info
     environment:
-      - REDIS_HOST=redis
+      - WORKER_ID=worker_2
     depends_on:
       - redis
 
-  redis:
-    image: redis:alpine
-    container_name: redis
+  worker_3:
+    build: ./worker_nodes
+    command: celery -A app.celery_worker worker --loglevel=info
+    environment:
+      - WORKER_ID=worker_2
+    depends_on:
+      - redis
+
