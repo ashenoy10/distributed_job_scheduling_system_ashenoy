@@ -18,6 +18,7 @@ class ECIRequest(BaseModel):
 def submit_eci_to_ecef_endpoint(eci_request: ECIRequest):
     try:
         task_id, job_id = submit_eci_to_ecef([dict(point) for point in eci_request.trajectory])
+        print(f"task_id: {task_id}, job_id: {job_id}, status: Job submitted successfully")
         return {"task_id": task_id, "job_id": job_id, "status": "Job submitted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
