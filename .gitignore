@@ -1,0 +1,3 @@
+.venv/
+worker_nodes/app/__pycache__
+coordinator/app/__pycache__
