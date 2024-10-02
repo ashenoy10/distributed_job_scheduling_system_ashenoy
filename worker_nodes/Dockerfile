@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim
+FROM python
 
 # Set the working directory in the container
 WORKDIR /app
@@ -9,6 +9,3 @@ COPY . /app
 
 # Install any needed packages
 RUN pip install -r requirements.txt
-
-# Start the Celery worker
-CMD ["celery", "-A", "app.tasks", "worker", "--loglevel=info"]

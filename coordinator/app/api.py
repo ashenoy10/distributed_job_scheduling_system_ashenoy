@@ -17,8 +17,8 @@ class ECIRequest(BaseModel):
 @app.post("/submit-eci-to-ecef/")
 def submit_eci_to_ecef_endpoint(eci_request: ECIRequest):
     try:
-        task_id = submit_eci_to_ecef([dict(point) for point in eci_request.trajectory])
-        return {"task_id": task_id, "status": "Job submitted successfully"}
+        task_id, job_id = submit_eci_to_ecef([dict(point) for point in eci_request.trajectory])
+        return {"task_id": task_id, "job_id": job_id, "status": "Job submitted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -29,3 +29,17 @@ def job_status(task_id: str):
         return status
     else:
         raise HTTPException(status_code=404, detail="Job not found")
+
+# Define the expected data model
+class WorkerStatus(BaseModel):
+    worker_id: str
+    status: str
+    job_id: str
+
+@app.post("/register-worker")
+def register_worker(worker: WorkerStatus):
+    reg_string = f"Worker registered: {worker.worker_id}, Status: {worker.status}"
+    if worker.job_id != "":
+        reg_string = reg_string + f", Job ID: {worker.job_id}"
+    print(reg_string)
+    return {"worker_id": worker.worker_id, "status": worker.status, "message": "Worker registered successfully"}

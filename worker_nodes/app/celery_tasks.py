@@ -1,12 +1,10 @@
 from celery import Celery
-import time
-import random
 import numpy as np
 from celery import Celery
 from .celery_worker import celery_app
 from datetime import datetime
 import math
-from .worker import update_worker_status
+from .worker_utils import update_worker_status
 
 celery_app = Celery('tasks', broker='redis://localhost:6379/0')
 
@@ -56,7 +54,7 @@ def ingest_eci_output_ecef(self, job_id, eci_trajectory):
                     
     Returns a list of ECEF coordinates.
     """
-    update_worker_status("busy")
+    update_worker_status("busy", job_id)
     ecef_trajectory = []
 
     for point in eci_trajectory:
@@ -71,6 +69,6 @@ def ingest_eci_output_ecef(self, job_id, eci_trajectory):
             'z_ecef': ecef_coords[2],
             'timestamp': point['timestamp']
         })
-        update_worker_status("available")
+    update_worker_status("available")
 
     return {"job_id": job_id, "ecef_trajectory": ecef_trajectory}

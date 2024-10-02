@@ -5,7 +5,7 @@ def submit_eci_to_ecef(eci_trajectory):
     """Submit a job to convert ECI to ECEF"""
     job_id = str(uuid.uuid4())
     task = celery_app.send_task("worker_nodes.app.celery_tasks.ingest_eci_output_ecef", args=[job_id, eci_trajectory])
-    return task.id
+    return task.id, job_id
 
 def get_job_status(task_id):
     """Get the status of a job"""
@@ -18,4 +18,3 @@ def get_job_status(task_id):
         return {"status": "failed", "error": str(task.info)}
     else:
         return {"status": task.state}
-

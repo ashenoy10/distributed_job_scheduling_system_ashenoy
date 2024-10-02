@@ -6,6 +6,7 @@ services:
 
   coordinator:
     build: ./coordinator
+    command: uvicorn app.api:app --host 0.0.0.0 --port 8000
     container_name: coordinator
     volumes:
       - ./worker_nodes:/app/worker_nodes
@@ -18,25 +19,24 @@ services:
 
   worker_1:
     build: ./worker_nodes
-    command: celery -A app.celery_worker worker --loglevel=info
+    command: ./start_and_register.sh
     environment:
       - WORKER_ID=worker_1
     depends_on:
-      - redis
+      - coordinator
 
   worker_2:
     build: ./worker_nodes
-    command: celery -A app.celery_worker worker --loglevel=info
+    command: ./start_and_register.sh
     environment:
       - WORKER_ID=worker_2
     depends_on:
-      - redis
+      - coordinator
 
   worker_3:
     build: ./worker_nodes
-    command: celery -A app.celery_worker worker --loglevel=info
+    command: ./start_and_register.sh
     environment:
-      - WORKER_ID=worker_2
+      - WORKER_ID=worker_3
     depends_on:
-      - redis
-
+      - coordinator
