@@ -2,18 +2,22 @@
 
 ### Basic File Structure ###
     
-    -- coordinator -> single container
-        -- app
+    -- coordinator/ -> single container
+        -- app/
             -- api.py -> FastAPI structure and query entry points for coordinator
             -- manager.py -> Celery manager/helper and routing to worker
             
-    -- worker_nodes -> each worker (3 specified in docker-compose.yaml) has a container
-        -- app
+    -- worker_nodes/ -> each worker (3 specified in docker-compose.yaml) has a container
+        -- app/
             -- celery_tasks.py -> actual definition of executable tasks (ECI trajectory to ECEF trajectory tool)
             -- celery_worker.py -> definition of Celery configs, redis broker definition
             -- worker_utils.py -> utilities to help worker report status to coordinator 
                                   (register_worker function is commanded by docker-compose.yaml 
                                    to verify worker is available at container startup)
+
+    -- tests/
+        -- trajectories/ -> trajectory files in ECI coordinates for test cases
+        -- test_cases.py -> all test cases required to test capability using Pytest
 
 ### How to start the system ###
 
