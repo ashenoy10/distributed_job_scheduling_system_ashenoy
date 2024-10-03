@@ -54,7 +54,7 @@ def test_concurrent_jobs():
         trajectories.append(data)
 
     # Submit each trajectory 20 times, for a total of 100 submissions
-    with ThreadPoolExecutor(max_workers=3) as executor:
+    with ThreadPoolExecutor(100) as executor:
         futures = [
             executor.submit(submit_job, trajectory)
             for trajectory in trajectories
