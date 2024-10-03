@@ -1,4 +1,4 @@
-from celery import Celery  # Import the tasks to ensure they are registered
+from celery import Celery 
 
 celery_app = Celery(
     'app',
@@ -14,4 +14,5 @@ celery_app.conf.update(
     enable_utc=True,
 )
 
+# Import the tasks to ensure they are registered
 from . import celery_tasks
