@@ -14,10 +14,15 @@
             -- worker_utils.py -> utilities to help worker report status to coordinator 
                                   (register_worker function is commanded by docker-compose.yaml 
                                    to verify worker is available at container startup)
+        -- start_and_register.sh -> starts celery workers and registers them w/ coordinator via python cmd
 
     -- tests/
         -- trajectories/ -> trajectory files in ECI coordinates for test cases
         -- test_cases.py -> all test cases required to test capability using Pytest
+
+    -- start_services.sh -> central executor to tear down any running containers and bring up all containers and
+                            dependencies (puts the system in a state to accept jobs via REST API)
+
 
 ### How to start the system ###
 
