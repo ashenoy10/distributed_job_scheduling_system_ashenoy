@@ -28,7 +28,7 @@
 
 With repository as current directory, run:
 
-    % start_services.sh
+    % ./start_services.sh
 
 This will:
 - Tear down any currently running containers
