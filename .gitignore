@@ -4,3 +4,4 @@ worker_nodes/app/__pycache__
 coordinator/app/__pycache__
 worker_nodes/.DS_Store
 coordinator/.DS_Store
+tests/.DS_Store
