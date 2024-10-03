@@ -23,7 +23,3 @@ def update_worker_status(status, job_id=""):
         print(f"Worker {WORKER_ID} status updated to {status}.")
     else:
         print(f"Failed to update status for worker {WORKER_ID}.")
-    
-
-def request_worker_status(WORKER_ID):
-    """Update the status of the worker."""
