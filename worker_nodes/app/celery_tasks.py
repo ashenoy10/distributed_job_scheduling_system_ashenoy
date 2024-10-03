@@ -14,10 +14,9 @@ EARTH_ROTATION_RATE = 7.2921159e-5  # Earth's rotation rate in radians per secon
 def compute_era(timestamp: datetime) -> float:
     """
     Compute Earth Rotation Angle (ERA) based on the given timestamp.
-    ERA = Earth's rotation rate * seconds since epoch (simplified).
+    ERA = Earth's rotation rate * seconds since epoch
     """
-    # Simplified approach for demonstration. Typically, this requires accurate astronomical formulas.
-    seconds_since_epoch = (timestamp - datetime(2000, 1, 1, 12, 0, 0)).total_seconds()
+    seconds_since_epoch = (timestamp - datetime(2000, 1, 1, 12, 0, 0)).total_seconds() # Approximate unix time
     era = (EARTH_ROTATION_RATE * seconds_since_epoch) % (2 * math.pi)  # In radians
     return era
 
